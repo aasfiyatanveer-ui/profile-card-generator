@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Profile Card Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#f5f4fb;min-height:100vh;color:#1a1523}
+
+header{background:#fff;border-bottom:1px solid #e5e3f0;padding:1rem 2rem;display:flex;align-items:center;gap:10px}
+.logo-icon{width:32px;height:32px;background:#6C63FF;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.logo-icon svg{width:18px;height:18px}
+header h1{font-size:17px;font-weight:600;color:#1a1523}
+header span{color:#6C63FF}
+
+.main{max-width:960px;margin:0 auto;padding:2rem 1.5rem}
+.hero{text-align:center;margin-bottom:2rem}
+.hero h2{font-size:1.75rem;font-weight:600;margin-bottom:0.4rem}
+.hero p{color:#6b6580;font-size:14px}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+@media(max-width:640px){.grid{grid-template-columns:1fr}}
+
+.panel{background:#fff;border:1px solid #e5e3f0;border-radius:16px;padding:1.5rem}
+.panel-label{font-size:12px;font-weight:600;color:#9e98b5;text-transform:uppercase;letter-spacing:.05em;margin-bottom:1.2rem}
+
+.field{margin-bottom:.9rem}
+.field label{display:block;font-size:13px;font-weight:500;color:#6b6580;margin-bottom:4px}
+.field input,.field textarea,.field select{
+  width:100%;font-family:'Inter',sans-serif;font-size:14px;color:#1a1523;
+  background:#fff;border:1px solid #e5e3f0;border-radius:8px;
+  padding:9px 12px;outline:none;transition:border-color .15s,box-shadow .15s
+}
+.field input:focus,.field textarea:focus,.field select:focus{
+  border-color:#AFA9EC;box-shadow:0 0 0 3px rgba(175,169,236,.2)
+}
+.field textarea{resize:vertical;height:80px}
+.field select{
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6580' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;cursor:pointer
+}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+.btn{
+  width:100%;margin-top:.5rem;padding:11px;
+  font-family:'Inter',sans-serif;font-size:14px;font-weight:600;
+  color:#fff;background:#6C63FF;border:none;border-radius:8px;
+  cursor:pointer;transition:background .15s,transform .1s
+}
+.btn:hover{background:#534AB7}
+.btn:active{transform:scale(.98)}
+
+/* preview */
+.preview-area{display:flex;flex-direction:column}
+.placeholder{
+  flex:1;border:1.5px dashed #e5e3f0;border-radius:16px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;min-height:300px;color:#9e98b5;font-size:14px;text-align:center;padding:2rem
+}
+.placeholder svg{opacity:.4}
+
+/* card */
+.card{background:#fff;border:1px solid #e5e3f0;border-radius:16px;overflow:hidden;animation:pop .25s ease}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.card-banner{height:72px}
+.card-body{padding:0 1.2rem 1.2rem}
+.avatar-wrap{margin-top:-30px;margin-bottom:10px}
+.avatar{width:60px;height:60px;border-radius:50%;border:3px solid #fff;object-fit:cover;display:block}
+.avatar-circle{
+  width:60px;height:60px;border-radius:50%;border:3px solid #fff;
+  display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:600
+}
+.card-name{font-size:16px;font-weight:600;margin:0 0 2px}
+.card-role{font-size:13px;color:#6b6580;margin:0 0 10px}
+.card-bio{font-size:13px;line-height:1.65;color:#6b6580;border-top:1px solid #f0eef8;padding-top:10px;margin-bottom:10px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:12px;font-weight:500;padding:3px 10px;border-radius:999px;border:1px solid #e5e3f0;color:#6b6580;background:#f5f4fb}
+.card-links{display:flex;flex-wrap:wrap;gap:10px;padding-top:10px;border-top:1px solid #f0eef8}
+.card-link{font-size:12px;font-weight:500;color:#6b6580;text-decoration:none;display:flex;align-items:center;gap:5px}
+.card-link:hover{color:#1a1523}
+
+.copy-btn{
+  margin-top:10px;width:100%;padding:9px;font-family:'Inter',sans-serif;font-size:13px;
+  font-weight:500;color:#6b6580;background:#f5f4fb;border:1px solid #e5e3f0;
+  border-radius:8px;cursor:pointer;transition:background .15s
+}
+.copy-btn:hover{background:#fff;color:#1a1523}
+
+footer{text-align:center;padding:2rem;font-size:13px;color:#9e98b5}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
+      <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+    </svg>
+  </div>
+  <h1>Profile<span>Card</span> Generator</h1>
+</header>
+
+<div class="main">
+  <div class="hero">
+    <h2>Build Your Profile Card</h2>
+    <p>Fill in your details and instantly see your card — no login, no API key needed.</p>
+  </div>
+
+  <div class="grid">
+    <!-- FORM -->
+    <div class="panel">
+      <p class="panel-label">Your Details</p>
+
+      <div class="field">
+        <label>Full Name *</label>
+        <input id="f-name" type="text" placeholder="e.g. Aasfiya Tanveer"/>
+      </div>
+      <div class="field">
+        <label>Role / Title</label>
+        <input id="f-role" type="text" placeholder="e.g. CS Student & Developer"/>
+      </div>
+      <div class="field">
+        <label>Bio *</label>
+        <textarea id="f-bio" placeholder="A short description about yourself, your skills, or what you're building..."></textarea>
+      </div>
+      <div class="field">
+        <label>Skills <small style="font-weight:400;color:#9e98b5">(comma-separated)</small></label>
+        <input id="f-skills" type="text" placeholder="Python, Machine Learning, FastAPI"/>
+      </div>
+      <div class="field">
+        <label>Profile Image URL <small style="font-weight:400;color:#9e98b5">(optional)</small></label>
+        <input id="f-img" type="url" placeholder="https://..."/>
+      </div>
+      <div class="field">
+        <label>GitHub URL</label>
+        <input id="f-github" type="url" placeholder="https://github.com/username"/>
+      </div>
+      <div class="field">
+        <label>LinkedIn URL</label>
+        <input id="f-linkedin" type="url" placeholder="https://linkedin.com/in/username"/>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>Accent Color</label>
+          <select id="f-theme">
+            <option value="purple">Purple</option>
+            <option value="teal">Teal</option>
+            <option value="blue">Blue</option>
+            <option value="coral">Coral</option>
+            <option value="amber">Amber</option>
+            <option value="pink">Pink</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Card Style</label>
+          <select id="f-style">
+            <option value="minimal">Minimal</option>
+            <option value="tags">With Tags</option>
+            <option value="full">Full</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn" onclick="generateCard()">Generate Card</button>
+    </div>
+
+    <!-- PREVIEW -->
+    <div class="preview-area">
+      <div class="panel" style="flex:1;padding:1.5rem">
+        <p class="panel-label">Preview</p>
+        <div id="preview">
+          <div class="placeholder">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+              <rect width="48" height="48" rx="12" fill="#EEEDFE"/>
+              <circle cx="24" cy="18" r="6" fill="#AFA9EC"/>
+              <path d="M10 38c0-7.7 6.3-14 14-14s14 6.3 14 14" stroke="#AFA9EC" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+            <p>Fill in the form and click<br/><strong>Generate Card</strong></p>
+          </div>
+        </div>
+      </div>
+      <button class="copy-btn" id="copy-btn" style="display:none" onclick="copyText()">Copy Card Text</button>
+    </div>
+  </div>
+</div>
+
+<footer>Made with ❤️ · No backend, no API key, pure HTML/CSS/JS</footer>
+
+<script>
+const THEMES = {
+  purple:{ banner:"#EEEDFE", bg:"#534AB7", text:"#fff" },
+  teal:  { banner:"#E1F5EE", bg:"#0F6E56", text:"#fff" },
+  blue:  { banner:"#E6F1FB", bg:"#185FA5", text:"#fff" },
+  coral: { banner:"#FAECE7", bg:"#993C1D", text:"#fff" },
+  amber: { banner:"#FAEEDA", bg:"#854F0B", text:"#fff" },
+  pink:  { banner:"#FBEAF0", bg:"#993556", text:"#fff" },
+};
+
+function initials(name){
+  return name.trim().split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+}
+
+function linkIcon(type){
+  if(type==='github') return `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>`;
+  return `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>`;
+}
+
+let lastText = '';
+
+function generateCard(){
+  const name    = document.getElementById('f-name').value.trim();
+  const role    = document.getElementById('f-role').value.trim();
+  const bio     = document.getElementById('f-bio').value.trim();
+  const skills  = document.getElementById('f-skills').value.trim();
+  const imgUrl  = document.getElementById('f-img').value.trim();
+  const github  = document.getElementById('f-github').value.trim();
+  const linkedin= document.getElementById('f-linkedin').value.trim();
+  const theme   = document.getElementById('f-theme').value;
+  const style   = document.getElementById('f-style').value;
+
+  if(!name || !bio){
+    alert('Please enter at least your name and bio.');
+    return;
+  }
+
+  const ac = THEMES[theme];
+  const ini = initials(name);
+
+  // avatar
+  const avatarHtml = imgUrl
+    ? `<img class="avatar" src="${imgUrl}" alt="${name}" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+       <div class="avatar-circle" style="background:${ac.bg};color:${ac.text};display:none">${ini}</div>`
+    : `<div class="avatar-circle" style="background:${ac.bg};color:${ac.text}">${ini}</div>`;
+
+  // tags
+  const tagList = skills ? skills.split(',').map(s=>s.trim()).filter(Boolean) : [];
+  const tagsHtml = (style !== 'minimal' && tagList.length)
+    ? `<div class="tags">${tagList.map(t=>`<span class="tag">${t}</span>`).join('')}</div>`
+    : '';
+
+  // links
+  const linksArr = [];
+  if(github)   linksArr.push(`<a class="card-link" href="${github}"  target="_blank" rel="noopener">${linkIcon('github')} GitHub</a>`);
+  if(linkedin) linksArr.push(`<a class="card-link" href="${linkedin}" target="_blank" rel="noopener">${linkIcon('linkedin')} LinkedIn</a>`);
+  const linksHtml = (style === 'full' && linksArr.length)
+    ? `<div class="card-links">${linksArr.join('')}</div>`
+    : '';
+
+  const html = `
+    <div class="card">
+      <div class="card-banner" style="background:${ac.banner}"></div>
+      <div class="card-body">
+        <div class="avatar-wrap">${avatarHtml}</div>
+        <p class="card-name">${name}</p>
+        ${role ? `<p class="card-role">${role}</p>` : ''}
+        <div class="card-bio">${bio}</div>
+        ${tagsHtml}
+        ${linksHtml}
+      </div>
+    </div>`;
+
+  document.getElementById('preview').innerHTML = html;
+  document.getElementById('copy-btn').style.display = 'block';
+
+  lastText = [name, role, bio, tagList.length ? 'Skills: '+tagList.join(', '):''].filter(Boolean).join('\n');
+}
+
+function copyText(){
+  navigator.clipboard?.writeText(lastText).then(()=>{
+    const b = document.getElementById('copy-btn');
+    b.textContent = '✓ Copied!';
+    setTimeout(()=>b.textContent='Copy Card Text', 2000);
+  });
+}
+
+document.querySelectorAll('input').forEach(inp=>{
+  inp.addEventListener('keydown', e=>{ if(e.key==='Enter') generateCard(); });
+});
+</script>
+</body>
+</html>
